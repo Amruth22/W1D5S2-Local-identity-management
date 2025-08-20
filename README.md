@@ -60,12 +60,7 @@ The API will be available at: `http://localhost:8000`
 
 ### 4. Run Tests
 ```bash
-python test_meeting_system.py
-```
-
-### 5. See Demo
-```bash
-python demo_system.py
+python unit_test.py
 ```
 
 ## 📊 API Endpoints
@@ -240,16 +235,19 @@ CREATE TABLE audit_logs (
 
 ### **Run All Tests**
 ```bash
-python test_meeting_system.py
+python unit_test.py
 ```
 
-### **Test Categories**
+### **Test Categories** (`unit_test.py`)
 - **Employee Registration**: Password complexity, duplicate prevention
-- **Authentication**: Login, account lockout, session management
-- **Room Booking**: Booking creation, conflict prevention, cancellation
+- **Authentication**: Login, account lockout, session management  
+- **Session Management**: Activity tracking, logout functionality
+- **Meeting Room Booking**: Booking creation, conflict prevention, my bookings
 - **Role-Based Access**: Permission validation for different roles
 - **Audit Logging**: Verification of all logged events
-- **Security Features**: Token validation, session timeout
+- **Profile Management**: Profile updates with audit trails
+- **Security Features**: Token validation, protected endpoints
+- **System Health**: Health checks and system status
 
 ## 📊 Audit Event Types
 
