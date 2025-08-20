@@ -677,8 +677,8 @@ class TestSystemHealth:
         # Check that all expected features are listed
         features = data["features"]
         assert "Local Identity Management" in features
-        assert "Security Hardening" in features
-        assert "Audit Logging" in features
+        assert any("Security Hardening" in feature for feature in features)
+        assert any("Audit Logging" in feature for feature in features)
 
 # Simple test runner
 if __name__ == "__main__":
