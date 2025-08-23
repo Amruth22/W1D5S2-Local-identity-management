@@ -253,6 +253,37 @@ class TestAuthentication:
 class TestAuthentication:
     """Test authentication and security features via live API"""
     
+    def test_successful_login(self):
+        """Test successful employee login"""
+        test_employee = create_test_employee("employee", "login")
+        
+        # Register employee first
+        requests.post(f"{BASE_URL}/auth/register", json=test_employee, timeout=TIMEOUT)
+        
+        # Login
+        login_data = {"email": test_employee["email"], "password": test_employee["password"]}
+        response = requests.post(f"{BASE_URL}/auth/login", json=login_data, timeout=TIMEOUT)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert "access_token" in data
+        assert data["token_type"] == "bearer"
+        assert data["expires_in"] == 30 * 60  # 30 minutes in seconds
+    
+    def test_invalid_login_credentials(self):
+        """Test login with invalid credentials"""
+        test_employee = create_test_employee("employee", "invalid")
+        
+        # Register employee first
+        requests.post(f"{BASE_URL}/auth/register", json=test_employee, timeout=TIMEOUT)
+        
+        # Try login with wrong password
+        login_data = {"email": test_employee["email"], "password": "wrongpassword"}
+        response = requests.post(f"{BASE_URL}/auth/login", json=login_data, timeout=TIMEOUT)
+        
+        assert response.status_code == 401
+        assert "Invalid email or password" in response.json()["detail"]
+    
     def test_session_activity_and_profile_access(self):
         """Test session activity through profile access"""
         session_employee = create_test_employee("employee", "session")
