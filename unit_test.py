@@ -10,7 +10,7 @@ import json
 from datetime import datetime, timedelta
 
 # Configuration for live server testing
-BASE_URL = ""
+BASE_URL = "http://localhost:8080"
 TIMEOUT = 30  # seconds
 
 def check_server_running():
