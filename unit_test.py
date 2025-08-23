@@ -140,6 +140,61 @@ class TestEmployeeRegistration:
 class TestEmployeeRegistration:
     """Test employee registration with password complexity via live API"""
     
+    def test_employee_registration_success(self):
+        """Test successful employee registration"""
+        test_employee = create_test_employee("employee", "register")
+        
+        response = requests.post(f"{BASE_URL}/auth/register", json=test_employee, timeout=TIMEOUT)
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["message"] == "Employee registered successfully"
+        assert data["employee_id"] == test_employee["employee_id"]
+        assert data["email"] == test_employee["email"]
+        assert data["role"] == test_employee["role"]
+    
+    def test_password_complexity_requirements(self):
+        """Test password complexity validation"""
+        # Test password too short
+        weak_employee = create_test_employee("employee", "weak1")
+        weak_employee["password"] = "weak"  # Too short
+        
+        response = requests.post(f"{BASE_URL}/auth/register", json=weak_employee, timeout=TIMEOUT)
+        assert response.status_code == 422
+        assert "at least 8 characters" in str(response.json())
+        
+        # Test password without number
+        no_number = create_test_employee("employee", "weak2")
+        no_number["password"] = "NoNumberPass!"  # No number
+        
+        response = requests.post(f"{BASE_URL}/auth/register", json=no_number, timeout=TIMEOUT)
+        assert response.status_code == 422
+        assert "at least one number" in str(response.json())
+        
+        # Test password without special character
+        no_special = create_test_employee("employee", "weak3")
+        no_special["password"] = "NoSpecial123"  # No special char
+        
+        response = requests.post(f"{BASE_URL}/auth/register", json=no_special, timeout=TIMEOUT)
+        assert response.status_code == 422
+        assert "special character" in str(response.json())
+    
+    def test_duplicate_employee_registration(self):
+        """Test duplicate employee registration"""
+        test_employee = create_test_employee("employee", "duplicate")
+        
+        # Register first time
+        requests.post(f"{BASE_URL}/auth/register", json=test_employee, timeout=TIMEOUT)
+        
+        # Try to register again
+        response = requests.post(f"{BASE_URL}/auth/register", json=test_employee, timeout=TIMEOUT)
+        
+        assert response.status_code == 400
+        assert "already exists" in response.json()["detail"]
+
+class TestAuthentication:
+    """Test authentication and security features via live API"""
+    
     def test_successful_login(self):
         """Test successful employee login"""
         test_employee = create_test_employee("employee", "login")
