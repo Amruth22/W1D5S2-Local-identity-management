@@ -520,6 +520,86 @@ def run_live_api_tests():
     
     return test_results['failed'] == 0
 
+# Simple test runner for live API tests
+def run_live_api_tests():
+    """Run API tests against live server"""
+    global test_results
+    test_results = {"passed": 0, "failed": 0, "total": 0}
+    
+    print("🧪 Running Live API Tests (Meeting Room System)")
+    print("=" * 60)
+    
+    # Check if server is running
+    if not check_server_running():
+        print("❌ ERROR: Server is not running!")
+        print("")
+        print("Please start the server first:")
+        print("  1. Open a terminal and run: python main.py")
+        print("  2. Wait for the server to start")
+        print("  3. Then run these tests in another terminal")
+        print("")
+        return False
+    
+    print(f"✅ Server is running at {BASE_URL}")
+    print("")
+    
+    # Core 10 Essential Tests
+    print("🎯 Running Core 10 Essential Tests:")
+    
+    # System Health Tests
+    test_health = TestSystemHealth()
+    run_test(test_health.test_root_endpoint, "1. Root Endpoint Information")
+    run_test(test_health.test_health_check, "2. Health Check Endpoint")
+    
+    # Employee Registration Tests
+    test_reg = TestEmployeeRegistration()
+    run_test(test_reg.test_employee_registration_success, "3. Employee Registration Success")
+    run_test(test_reg.test_password_complexity_requirements, "4. Password Complexity Validation")
+    run_test(test_reg.test_duplicate_employee_registration, "5. Duplicate Registration Prevention")
+    
+    # Authentication Tests
+    test_auth = TestAuthentication()
+    run_test(test_auth.test_successful_login, "6. Successful Login")
+    run_test(test_auth.test_invalid_login_credentials, "7. Invalid Login Rejection")
+    run_test(test_auth.test_session_activity_and_profile_access, "8. Session Management & Profile Access")
+    
+    # Meeting Room Tests
+    test_booking = TestMeetingRoomBooking()
+    run_test(test_booking.test_get_available_rooms, "9. Meeting Room Access")
+    run_test(test_booking.test_create_booking_success, "10. Room Booking Functionality")
+    
+    # Display results
+    print("\n" + "=" * 60)
+    print("📊 TEST RESULTS SUMMARY")
+    print("=" * 60)
+    print(f"🎯 Total Tests: {test_results['total']}")
+    print(f"✅ Passed: {test_results['passed']}")
+    print(f"❌ Failed: {test_results['failed']}")
+    
+    if test_results['failed'] == 0:
+        print(f"\n🎉 ALL TESTS PASSED! ({test_results['passed']}/{test_results['total']})")
+        success_rate = 100.0
+    else:
+        success_rate = (test_results['passed'] / test_results['total']) * 100
+        print(f"\n⚠️  SOME TESTS FAILED ({test_results['passed']}/{test_results['total']})")
+    
+    print(f"📊 Success Rate: {success_rate:.1f}%")
+    
+    print("\n" + "=" * 60)
+    print("📚 Core 10 Tests Covered:")
+    print("• 1-2: System health and information endpoints")
+    print("• 3-5: Employee registration and validation")
+    print("• 6-8: Authentication, login security, and session management")
+    print("• 9-10: Meeting room access and booking functionality")
+    
+    print("\n💡 Why These Tests Matter:")
+    print("• Validate identity management security")
+    print("• Test authentication and authorization")
+    print("• Verify business logic functionality")
+    print("• Ensure system security hardening")
+    
+    return test_results['failed'] == 0
+
 if __name__ == "__main__":
     # Run live API tests
     success = run_live_api_tests()
@@ -606,6 +686,86 @@ def run_live_api_tests():
     print("• 4-6: Authentication and security (login, lockout)")
     print("• 7-8: Session management and endpoint protection")
     print("• 9-10: Meeting room access and booking")
+    
+    print("\n💡 Why These Tests Matter:")
+    print("• Validate identity management security")
+    print("• Test authentication and authorization")
+    print("• Verify business logic functionality")
+    print("• Ensure system security hardening")
+    
+    return test_results['failed'] == 0
+
+# Simple test runner for live API tests
+def run_live_api_tests():
+    """Run API tests against live server"""
+    global test_results
+    test_results = {"passed": 0, "failed": 0, "total": 0}
+    
+    print("🧪 Running Live API Tests (Meeting Room System)")
+    print("=" * 60)
+    
+    # Check if server is running
+    if not check_server_running():
+        print("❌ ERROR: Server is not running!")
+        print("")
+        print("Please start the server first:")
+        print("  1. Open a terminal and run: python main.py")
+        print("  2. Wait for the server to start")
+        print("  3. Then run these tests in another terminal")
+        print("")
+        return False
+    
+    print(f"✅ Server is running at {BASE_URL}")
+    print("")
+    
+    # Core 10 Essential Tests
+    print("🎯 Running Core 10 Essential Tests:")
+    
+    # System Health Tests
+    test_health = TestSystemHealth()
+    run_test(test_health.test_root_endpoint, "1. Root Endpoint Information")
+    run_test(test_health.test_health_check, "2. Health Check Endpoint")
+    
+    # Employee Registration Tests
+    test_reg = TestEmployeeRegistration()
+    run_test(test_reg.test_employee_registration_success, "3. Employee Registration Success")
+    run_test(test_reg.test_password_complexity_requirements, "4. Password Complexity Validation")
+    run_test(test_reg.test_duplicate_employee_registration, "5. Duplicate Registration Prevention")
+    
+    # Authentication Tests
+    test_auth = TestAuthentication()
+    run_test(test_auth.test_successful_login, "6. Successful Login")
+    run_test(test_auth.test_invalid_login_credentials, "7. Invalid Login Rejection")
+    run_test(test_auth.test_session_activity_and_profile_access, "8. Session Management & Profile Access")
+    
+    # Meeting Room Tests
+    test_booking = TestMeetingRoomBooking()
+    run_test(test_booking.test_get_available_rooms, "9. Meeting Room Access")
+    run_test(test_booking.test_create_booking_success, "10. Room Booking Functionality")
+    
+    # Display results
+    print("\n" + "=" * 60)
+    print("📊 TEST RESULTS SUMMARY")
+    print("=" * 60)
+    print(f"🎯 Total Tests: {test_results['total']}")
+    print(f"✅ Passed: {test_results['passed']}")
+    print(f"❌ Failed: {test_results['failed']}")
+    
+    if test_results['failed'] == 0:
+        print(f"\n🎉 ALL TESTS PASSED! ({test_results['passed']}/{test_results['total']})")
+        success_rate = 100.0
+    else:
+        success_rate = (test_results['passed'] / test_results['total']) * 100
+        print(f"\n⚠️  SOME TESTS FAILED ({test_results['passed']}/{test_results['total']})")
+    
+    print(f"📊 Success Rate: {success_rate:.1f}%")
+    
+    print("\n" + "=" * 60)
+    print("📚 Core 10 Tests Covered:")
+    print("• 1-2: System health and information endpoints")
+    print("• 3-5: Employee registration and validation")
+    print("• 6-8: Authentication, login security, and session management")
+    print("• 9-10: Meeting room access and booking functionality")
     
     print("\n💡 Why These Tests Matter:")
     print("• Validate identity management security")
