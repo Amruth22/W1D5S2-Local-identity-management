@@ -40,7 +40,7 @@ class CoreIdentityManagementTests(unittest.TestCase):
             # Import Pydantic models
             from main import (
                 EmployeeRegister, EmployeeLogin, Token, Employee, RoomBooking, 
-                Room, Booking, MovieRating
+                Room, Booking
             )
             
             # Import FastAPI testing client
