@@ -29,7 +29,7 @@ class CoreIdentityManagementTests(unittest.TestCase):
         # Initialize Identity Management components (classes only, no heavy initialization)
         try:
             # Import main application components
-            from main import app, users_db, failed_attempts, active_sessions
+            from main import app, failed_attempts, active_sessions
             from main import (
                 hash_password, verify_password, create_access_token, get_current_employee,
                 is_account_locked, record_failed_attempt, reset_failed_attempts,
@@ -48,7 +48,6 @@ class CoreIdentityManagementTests(unittest.TestCase):
             
             cls.app = app
             cls.client = TestClient(app)
-            cls.users_db = users_db
             cls.failed_attempts = failed_attempts
             cls.active_sessions = active_sessions
             
@@ -87,13 +86,11 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.test_db_path = os.path.join(self.temp_dir, "test_meeting_room.db")
         
         # Clear in-memory storage
-        self.users_db.clear()
         self.failed_attempts.clear()
         self.active_sessions.clear()
         
-        # Reset counters
-        import main
-        main.user_counter = 1
+        # Note: This system uses SQLite database, not in-memory storage
+        # Database will be initialized as needed
         
         # Test data
         self.test_employee = {
@@ -133,7 +130,6 @@ class CoreIdentityManagementTests(unittest.TestCase):
     def tearDown(self):
         """Clean up test fixtures"""
         # Clear in-memory storage
-        self.users_db.clear()
         self.failed_attempts.clear()
         self.active_sessions.clear()
         
