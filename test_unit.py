@@ -28,52 +28,40 @@ class CoreIdentityManagementTests(unittest.TestCase):
         
         # Initialize Identity Management components (classes only, no heavy initialization)
         try:
-            # Import main application components
-            from main import app, failed_attempts, active_sessions
-            from main import (
-                hash_password, verify_password, create_access_token, get_current_employee,
-                is_account_locked, record_failed_attempt, reset_failed_attempts,
-                update_session_activity, is_session_expired, log_audit_event,
-                cleanup_old_audit_logs, init_database, get_db_connection
-            )
-            
-            # Import Pydantic models
-            from main import (
-                EmployeeRegister, EmployeeLogin, Token, Employee, RoomBooking, 
-                Room, Booking
-            )
+            # Try to import main module
+            import main
             
             # Import FastAPI testing client
             from fastapi.testclient import TestClient
             
-            cls.app = app
-            cls.client = TestClient(app)
-            cls.failed_attempts = failed_attempts
-            cls.active_sessions = active_sessions
+            cls.app = main.app
+            cls.client = TestClient(main.app)
+            cls.failed_attempts = main.failed_attempts
+            cls.active_sessions = main.active_sessions
             
             # Store utility functions
-            cls.hash_password = hash_password
-            cls.verify_password = verify_password
-            cls.create_access_token = create_access_token
-            cls.get_current_employee = get_current_employee
-            cls.is_account_locked = is_account_locked
-            cls.record_failed_attempt = record_failed_attempt
-            cls.reset_failed_attempts = reset_failed_attempts
-            cls.update_session_activity = update_session_activity
-            cls.is_session_expired = is_session_expired
-            cls.log_audit_event = log_audit_event
-            cls.cleanup_old_audit_logs = cleanup_old_audit_logs
-            cls.init_database = init_database
-            cls.get_db_connection = get_db_connection
+            cls.hash_password = main.hash_password
+            cls.verify_password = main.verify_password
+            cls.create_access_token = main.create_access_token
+            cls.get_current_employee = main.get_current_employee
+            cls.is_account_locked = main.is_account_locked
+            cls.record_failed_attempt = main.record_failed_attempt
+            cls.reset_failed_attempts = main.reset_failed_attempts
+            cls.update_session_activity = main.update_session_activity
+            cls.is_session_expired = main.is_session_expired
+            cls.log_audit_event = main.log_audit_event
+            cls.cleanup_old_audit_logs = main.cleanup_old_audit_logs
+            cls.init_database = main.init_database
+            cls.get_db_connection = main.get_db_connection
             
             # Store models
-            cls.EmployeeRegister = EmployeeRegister
-            cls.EmployeeLogin = EmployeeLogin
-            cls.Token = Token
-            cls.Employee = Employee
-            cls.RoomBooking = RoomBooking
-            cls.Room = Room
-            cls.Booking = Booking
+            cls.EmployeeRegister = main.EmployeeRegister
+            cls.EmployeeLogin = main.EmployeeLogin
+            cls.Token = main.Token
+            cls.Employee = main.Employee
+            cls.RoomBooking = main.RoomBooking
+            cls.Room = main.Room
+            cls.Booking = main.Booking
             
             print("Local identity management components loaded successfully")
         except ImportError as e:
@@ -153,7 +141,10 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertTrue(callable(self.log_audit_event))
         
         # Import functions directly for testing
-        from main import hash_password, verify_password, create_access_token
+        import main
+        hash_password = main.hash_password
+        verify_password = main.verify_password
+        create_access_token = main.create_access_token
         
         # Test password hashing functionality
         test_password = "TestPassword123!"
@@ -182,8 +173,8 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertEqual(len(token_parts), 3)
         
         # Test token payload
-        from main import SECRET_KEY, ALGORITHM
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        import main
+        payload = jwt.decode(token, main.SECRET_KEY, algorithms=[main.ALGORITHM])
         self.assertEqual(payload["sub"], test_email)
         self.assertIn("exp", payload)
         
@@ -232,7 +223,10 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertIn("Role must be one of", str(context.exception))
         
         # Test account lockout functionality
-        from main import is_account_locked, record_failed_attempt, reset_failed_attempts
+        import main
+        is_account_locked = main.is_account_locked
+        record_failed_attempt = main.record_failed_attempt
+        reset_failed_attempts = main.reset_failed_attempts
         
         test_email = "lockout_test@company.com"
         test_ip = "192.168.1.100"
@@ -241,7 +235,10 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertFalse(is_account_locked(test_email))
         
         # Test session management
-        from main import update_session_activity, is_session_expired, active_sessions
+        import main
+        update_session_activity = main.update_session_activity
+        is_session_expired = main.is_session_expired
+        active_sessions = main.active_sessions
         
         test_session_email = "session_test@company.com"
         
@@ -288,7 +285,8 @@ class CoreIdentityManagementTests(unittest.TestCase):
         test_conn.commit()
         
         # Test audit logging functionality
-        from main import log_audit_event
+        import main
+        log_audit_event = main.log_audit_event
         
         # Mock the database connection to use our test database
         original_get_db_connection = self.get_db_connection
@@ -351,7 +349,9 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertEqual(login_failed_log[6], 0)  # success = False
         
         # Test audit log cleanup functionality
-        from main import cleanup_old_audit_logs, AUDIT_LOG_RETENTION_DAYS
+        import main
+        cleanup_old_audit_logs = main.cleanup_old_audit_logs
+        AUDIT_LOG_RETENTION_DAYS = main.AUDIT_LOG_RETENTION_DAYS
         
         # Insert old log entry
         old_timestamp = datetime.now() - timedelta(days=AUDIT_LOG_RETENTION_DAYS + 1)
@@ -460,8 +460,8 @@ class CoreIdentityManagementTests(unittest.TestCase):
         self.assertIn("Insufficient permissions", response.json()["detail"])
         
         # Test role hierarchy validation
-        from main import require_role
-        role_checker = require_role("manager")
+        import main
+        role_checker = main.require_role("manager")
         self.assertTrue(callable(role_checker))
         
         print("PASS: Multi-role employee registration")
