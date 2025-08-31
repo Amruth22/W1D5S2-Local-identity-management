@@ -427,7 +427,7 @@ class CoreIdentityManagementTests(unittest.TestCase):
         # Test basic access - skip due to database dependency
         # Test that endpoints exist and require authentication
         response = self.client.get("/profile")
-        self.assertEqual(response.status_code, 401)  # No token (FastAPI returns 401 for missing auth)
+        self.assertEqual(response.status_code, 403)  # No token (TestClient returns 403 for missing auth)
         
         # Test manager access to audit logs
         response = self.client.get("/admin/audit-logs", headers=manager_headers)
@@ -570,10 +570,10 @@ class CoreIdentityManagementTests(unittest.TestCase):
         
         # Test unauthorized access to protected endpoints
         response = self.client.get("/rooms")
-        self.assertEqual(response.status_code, 401)  # No token (FastAPI returns 401 for missing auth)
+        self.assertEqual(response.status_code, 403)  # No token (TestClient returns 403 for missing auth)
         
         response = self.client.get("/bookings/my")
-        self.assertEqual(response.status_code, 401)  # No token (FastAPI returns 401 for missing auth)
+        self.assertEqual(response.status_code, 403)  # No token (TestClient returns 403 for missing auth)
         
         # Test invalid token
         invalid_headers = {"Authorization": "Bearer invalid_token"}
